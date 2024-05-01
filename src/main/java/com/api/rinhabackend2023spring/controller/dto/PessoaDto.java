@@ -1,16 +1,26 @@
 package com.api.rinhabackend2023spring.controller.dto;
 
 import com.api.rinhabackend2023spring.model.Pessoa;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public record PessoaDto(
-        String id,
+        UUID id,
+        @NotBlank
+        @Size(max = 32)
         String apelido,
+        @NotBlank
+        @Size(max = 100)
         String nome,
+        @NotNull
+        @PastOrPresent
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", locale = "pt_BR")
         LocalDate nascimento,
-        List<String> stack
+        List<@NotBlank @Size(max = 32) String> stack
 ) {
     public PessoaDto(Pessoa model) {
         this(
@@ -27,7 +37,7 @@ public record PessoaDto(
         model.setNome(this.nome);
         model.setApelido(this.apelido);
         model.setNascimento(this.nascimento);
-
+        model.setStack(this.stack);
         return model;
     }
 
